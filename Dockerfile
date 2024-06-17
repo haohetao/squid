@@ -7,8 +7,8 @@ ENV SQUID_VERSION=6.10 \
     SQUID_USER=proxy
 COPY entrypoint.sh /sbin/entrypoint.sh
 RUN apt-get update && apt-get install -y psmisc curl vim iputils-ping iproute2 \
-  build-essential libssl-dev openssl libxml2-dev libexpat1-dev libsasl2-dev \
-  libpam0g-dev libkrb5-dev pkg-config apache2-utils net-tools libecap3-dev libldap2-dev \
+  build-essential libssl-dev openssl libxml2 libxml2-dev libexpat1 libexpat1-dev libsasl2-2 libsasl2-dev \
+  libpam0g libpam0g-dev libkrb5-3 libkrb5-dev libecap3 libecap3-dev pkg-config libldap2 libldap2-dev \
   && rm -rf /var/lib/apt/lists/* \
   && curl http://www.squid-cache.org/Versions/v6/squid-${SQUID_VERSION}.tar.xz --output squid-${SQUID_VERSION}.tar.xz \
   && tar -Jxf squid-6.10.tar.xz \
@@ -64,6 +64,8 @@ RUN apt-get update && apt-get install -y psmisc curl vim iputils-ping iproute2 \
   --enable-underscore \
   && make && make install \
   && cd .. && rm -rf squid-${SQUID_VERSION} && rm squid-${SQUID_VERSION}.tar.xz \
+  && apt purge -y curl build-essential libssl-dev libxml2-dev libexpat1-dev libsasl2-dev libpam0g-dev libkrb5-dev libecap3-dev libldap2-dev \
+  && apt autoremove -y \
   && chmod u+s /usr/bin/pinger \
   && chmod 755 /sbin/entrypoint.sh
 
