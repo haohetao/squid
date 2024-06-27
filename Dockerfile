@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y psmisc curl vim iputils-ping iproute2 \
   --enable-linux-tproxy \
   --enable-async-io=100 \
   --enable-err-language="Simplify_Chinese" \
+  --enable-translation \
   --enable-poll \
   --enable-gnuregex \
   --build=x86_64-linux-gnu \
@@ -35,7 +36,6 @@ RUN apt-get update && apt-get install -y psmisc curl vim iputils-ping iproute2 \
   --disable-dependency-tracking \
   --disable-silent-rules \
   --enable-build-info="Ubuntu linux" \
-  --disable-translation \
   --with-filedescriptors=65536 \
   --with-large-files \
   --with-openssl \
@@ -63,8 +63,10 @@ RUN apt-get update && apt-get install -y psmisc curl vim iputils-ping iproute2 \
   --enable-ecap \
   --enable-underscore \
   && make && make install \
+  && errors/alias-link.sh ln rm errors errors/aliases \
+  && cp -a errors /usr/share/ \
   && cd .. && rm -rf squid-${SQUID_VERSION} && rm squid-${SQUID_VERSION}.tar.xz \
-  && apt purge -y curl build-essential libssl-dev libxml2-dev libexpat1-dev libsasl2-dev libpam0g-dev libkrb5-dev libecap3-dev libldap2-dev \
+  && apt purge -y build-essential libssl-dev libxml2-dev libexpat1-dev libsasl2-dev libpam0g-dev libkrb5-dev libecap3-dev libldap2-dev \
   && apt autoremove -y \
   && chmod u+s /usr/bin/pinger \
   && chmod 755 /sbin/entrypoint.sh
